@@ -16,32 +16,14 @@
 
 package uk.gov.hmrc.perftests.TGP
 
-import io.gatling.core.Predef._
-
 import io.gatling.http.request.builder.HttpRequestBuilder
 
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 
 import uk.gov.hmrc.perftests.TGP.TGPAPIRequest._
 import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority, taxIdentifier}
-import java.util.concurrent.atomic.AtomicInteger
-import scala.util.Random
 
 class TGPAPISimulation extends PerformanceTestRunner {
-
-  val RNG             = new Random
-  private val Counter = new AtomicInteger(0)
-
-  def setupSession(nextId: Int, lrn: String, session: Session): Session =
-    session.setAll(
-      List(
-        "currentTime"    -> System.currentTimeMillis().toString,
-        "random"         -> Math.abs(RNG.nextInt()),
-        "nextId"         -> nextId,
-        "localRefNumber" -> lrn,
-        "itemNumber"     -> 1
-      )
-    )
 
   def authRequests(identifier: String): Seq[HttpRequestBuilder] =
     if (!runLocal) {
