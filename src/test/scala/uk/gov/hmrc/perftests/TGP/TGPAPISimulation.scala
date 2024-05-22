@@ -17,11 +17,9 @@
 package uk.gov.hmrc.perftests.TGP
 
 import io.gatling.http.request.builder.HttpRequestBuilder
-
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
-
 import uk.gov.hmrc.perftests.TGP.TGPAPIRequest._
-import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority, taxIdentifier}
+import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{Identifier, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
 
 class TGPAPISimulation extends PerformanceTestRunner {
 
@@ -43,7 +41,7 @@ class TGPAPISimulation extends PerformanceTestRunner {
       Seq(postAuthLogin(identifier), getSession)
     }
 
-  setup("auth-part", "Create an access token ").withRequests(authRequests(taxIdentifier): _*)
+  setup("auth-part", "Create an access token ").withRequests(authRequests(Identifier): _*)
 
   setup("tgp-api-get-success-200-part", "GET TGP Api Record Request should return 200 Created status code")
     .withRequests(tgpapiGetSuccess200)

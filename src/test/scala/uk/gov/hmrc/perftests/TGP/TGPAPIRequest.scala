@@ -30,25 +30,27 @@ object TGPAPIRequest extends ServicesConfiguration {
     else baseUrlFor("tgp-api")
 
   def generateHeaders(
-    contentType: String = HttpHeaderValues.ApplicationXml,
+    contentType: String = "application/json",
     acceptHeader: String = "application/vnd.hmrc.1.0+json"
   ): Map[CharSequence, String] =
     if (!runLocal) {
       Map(
         HttpHeaderNames.ContentType   -> contentType,
         HttpHeaderNames.Authorization -> s"Bearer $bearerToken",
-        HttpHeaderNames.Accept        -> acceptHeader
+        HttpHeaderNames.Accept        -> acceptHeader,
+      "X-Client-ID"                 -> "test"
       )
     } else
       Map(
         HttpHeaderNames.ContentType   -> contentType,
         HttpHeaderNames.Authorization -> bearerToken,
-        HttpHeaderNames.Accept        -> acceptHeader
+        HttpHeaderNames.Accept        -> acceptHeader,
+        "X-Client-ID"                 -> "test"
       )
 
   val tgpapiGetSuccess200: HttpRequestBuilder =
     http("GET TGP Api Record Success Response 200")
-      .get(s"$baseUrl/GBWKQOZ99VLYR/records?lastUpdatedDate=2024-11-18T23:20:19Z")
+      .get(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
       .headers(generateHeaders())
       .check(status.is(200))
 }
