@@ -42,7 +42,7 @@ object TGPAuthRequests extends ServicesConfiguration {
   lazy val redirectionUrl  = s"$authBaseUrl/auth-login-stub/session"
   lazy val scope: String   = ""
 
-  final val taxIdentifier = "GBWKQOZ99VLYR"
+  final val Identifier = "GB123456789001"
 
   def saveCsrfToken(): CheckBuilder[RegexCheckType, String, String] = regex(_ => CsrfPattern).saveAs("csrfToken")
 
@@ -68,7 +68,7 @@ object TGPAuthRequests extends ServicesConfiguration {
       .formParam("confidenceLevel", "50")
       .formParam("affinityGroup", "Organisation")
       .formParam("enrolment[0].name", "HMRC-CUS-ORG")
-      .formParam("enrolment[0].taxIdentifier[0].name", "tgpFakeIdentifier")
+      .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
       .formParam("enrolment[0].taxIdentifier[0].value", Eori)
       .formParam("enrolment[0].state", "Activated")
       .check(status.is(303))
@@ -120,7 +120,7 @@ object TGPAuthRequests extends ServicesConfiguration {
       .formParam("authorityId", "abcd")
       .formParam("affinityGroup", "Organisation")
       .formParam("enrolment[0].name", "HMRC-CUS-ORG")
-      .formParam("enrolment[0].taxIdentifier[0].name", "taxIdentifier")
+      .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
       .formParam("enrolment[0].taxIdentifier[0].value", Eori)
       .formParam("enrolment[0].state", "Activated")
       .check(status.is(303))
