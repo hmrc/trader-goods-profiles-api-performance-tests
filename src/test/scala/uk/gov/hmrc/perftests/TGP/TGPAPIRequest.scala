@@ -26,7 +26,7 @@ object TGPAPIRequest extends ServicesConfiguration {
   val authLoginStub: String = "/auth-login-stub"
   val bearerToken: String   = readProperty("bearerToken", "${accessToken}")
   val baseUrl: String       =
-    if (!runLocal) s"${baseUrlFor("tgp-api")}"
+    if (!runLocal) s"${baseUrlFor("tgp-api")}/customs/traders/goods-profiles"
     else baseUrlFor("tgp-api")
 
   def generateHeaders(
@@ -37,8 +37,7 @@ object TGPAPIRequest extends ServicesConfiguration {
       Map(
         HttpHeaderNames.ContentType   -> contentType,
         HttpHeaderNames.Authorization -> s"Bearer $bearerToken",
-        HttpHeaderNames.Accept        -> acceptHeader,
-      "X-Client-ID"                 -> "test"
+        HttpHeaderNames.Accept        -> acceptHeader
       )
     } else
       Map(
