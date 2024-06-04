@@ -37,8 +37,7 @@ object TGPAPIRequest extends ServicesConfiguration {
       Map(
         HttpHeaderNames.ContentType   -> contentType,
         HttpHeaderNames.Authorization -> s"Bearer $bearerToken",
-        HttpHeaderNames.Accept        -> acceptHeader,
-      "X-Client-ID"                 -> "test"
+        HttpHeaderNames.Accept        -> acceptHeader
       )
     } else
       Map(
