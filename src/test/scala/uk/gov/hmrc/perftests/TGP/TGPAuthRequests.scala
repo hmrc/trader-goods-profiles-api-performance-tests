@@ -33,14 +33,14 @@ object TGPAuthRequests extends ServicesConfiguration {
   lazy val baseUrl_Auth_Token: String   = baseUrlFor("tgp-api")
   lazy val jsonPattern: UnanchoredRegex = """\{"\w+":"([^"]+)""".r.unanchored
 
-  lazy val clientId             = ""
-  lazy val clientSecret: String = ""
+  lazy val clientId             = "F2B062wphrSO6lV6bQB257vvd97B"
+  lazy val clientSecret: String = "b8899bac-403f-4fc1-b5fe-3a2f3b993681"
   lazy val redirectUri: String  = "urn:ietf:wg:oauth:2.0:oob"
   lazy val authBaseUrl: String  = baseUrlFor("auth-login-stub")
 
   lazy val authUrl: String = s"$authBaseUrl/auth-login-stub/gg-sign-in"
   lazy val redirectionUrl  = s"$authBaseUrl/auth-login-stub/session"
-  lazy val scope: String   = ""
+  lazy val scope: String   = "trader-goods-profiles"
 
   final val Identifier = "GB123456789001"
 
