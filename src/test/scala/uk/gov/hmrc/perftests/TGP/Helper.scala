@@ -16,4 +16,18 @@
 
 package uk.gov.hmrc.perftests.TGP
 
-object Helper {}
+import scala.io.Source
+
+object Helper {
+
+  def withFileAsString(fileName: String): String = {
+    val source = Source.fromFile(fileName, "utf-8")
+    try
+      source.mkString
+    finally
+      source.close()
+  }
+
+  val jsonBody: String       = withFileAsString("src/test/resources/data/Create.json")
+  val jsonBodyRemove: String = withFileAsString("src/test/resources/data/Remove.json")
+}

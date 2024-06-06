@@ -43,8 +43,29 @@ class TGPAPISimulation extends PerformanceTestRunner {
 
   setup("auth-part", "Create an access token ").withRequests(authRequests(Identifier): _*)
 
-  setup("tgp-api-get-success-200-part", "GET TGP Api Record Request should return 200 Created status code")
+  setup("tgp-api-get-single-goods-record-success-200-part", "TGP Get Single Record APi Success Response 200")
     .withRequests(tgpapiGetSuccess200)
+
+  setup("tgp-api-get-records-page-part", "GET TGP Api Records by Page -Success Response 200 ")
+    .withRequests(tgpapiGetRecordsPage)
+
+  setup("tgp-api-get-records-size-part", "GET TGP Api Records by Size -Success Response 200")
+    .withRequests(tgpapiGetRecordsSize)
+
+  setup("tgp-api-get-records-last-updated-date-part", "GET TGP Api Records by Last Updated Date -Success Response 200")
+    .withRequests(tgpapiGetRecordsLastUpdatedDate)
+
+  setup("tgp-api-get-record-EORI-part", "GET TGP Api Records by EORI -Success Response 200")
+    .withRequests(tgpapiGetEori)
+
+  setup("tgp-api-create-success-201-part", "CREATE TGP Api Record Success Response 201")
+    .withRequests(tgpapiCreateSuccess201)
+
+  setup("tgp-api-update-success-200-part", "UPDATE TGP Api Record Success Response 200")
+    .withRequests(tgpapiUpdateSuccess200)
+
+  setup("tgp-api-remove-success-200-part", "REMOVE TGP Api Record Success Response 200")
+    .withRequests(tgpapiRemoveSuccess200)
 
   runSimulation()
 }

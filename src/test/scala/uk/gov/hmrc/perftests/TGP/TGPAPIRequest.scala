@@ -17,8 +17,10 @@
 package uk.gov.hmrc.perftests.TGP
 
 import io.gatling.core.Predef._
+
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
+import io.netty.util.AsciiString
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
 object TGPAPIRequest extends ServicesConfiguration {
@@ -29,27 +31,86 @@ object TGPAPIRequest extends ServicesConfiguration {
     if (!runLocal) s"${baseUrlFor("tgp-api")}/customs/traders/goods-profiles"
     else baseUrlFor("tgp-api")
 
+  val CONTENT_TYPE_HEADER: AsciiString  = AsciiString.cached("Content-Type")
+  val ACCEPT_HEADER: AsciiString        = AsciiString.cached("Accept")
+  val AUTHORIZATION_HEADER: AsciiString = AsciiString.cached("Authorization")
+  val X_CLIENT_ID_HEADER: AsciiString   = AsciiString.cached("X-Client-ID")
+
+  // Default header values
+  val APPLICATION_JSON: String     = "application/json"
+  val CUSTOM_ACCEPT_HEADER: String = "application/vnd.hmrc.1.0+json"
+
   def generateHeaders(
-    contentType: String = "application/json",
-    acceptHeader: String = "application/vnd.hmrc.1.0+json"
-  ): Map[CharSequence, String] =
-    if (!runLocal) {
+    contentType: String = APPLICATION_JSON,
+    acceptHeader: String = CUSTOM_ACCEPT_HEADER
+  ): Map[String, String] =
+    if (!runLocal)
       Map(
-        HttpHeaderNames.ContentType   -> contentType,
-        HttpHeaderNames.Authorization -> s"Bearer $bearerToken",
-        HttpHeaderNames.Accept        -> acceptHeader
+        CONTENT_TYPE_HEADER.toString  -> contentType,
+        AUTHORIZATION_HEADER.toString -> s"Bearer $bearerToken",
+        ACCEPT_HEADER.toString        -> acceptHeader
       )
-    } else
+    else
       Map(
-        HttpHeaderNames.ContentType   -> contentType,
-        HttpHeaderNames.Authorization -> bearerToken,
-        HttpHeaderNames.Accept        -> acceptHeader,
-        "X-Client-ID"                 -> "test"
+        CONTENT_TYPE_HEADER.toString  -> contentType,
+        AUTHORIZATION_HEADER.toString -> bearerToken,
+        ACCEPT_HEADER.toString        -> acceptHeader,
+        X_CLIENT_ID_HEADER.toString   -> "test"
       )
 
   val tgpapiGetSuccess200: HttpRequestBuilder =
-    http("GET TGP Api Record Success Response 200")
+    http("TGP GET single Record Api Success Response 200")
       .get(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
       .headers(generateHeaders())
       .check(status.is(200))
+
+  val tgpapiCreateSuccess201: HttpRequestBuilder =
+    http("CREATE TGP Api Record Success Response 201")
+      .post(s"$baseUrl/GB123456789001/records")
+      .headers(generateHeaders())
+      .body(StringBody(Helper.jsonBody))
+      .asJson
+      .check(status.is(201))
+
+  val tgpapiUpdateSuccess200: HttpRequestBuilder =
+    http("UPDATE TGP Api Record Success Response 200")
+      .patch(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
+      .headers(generateHeaders())
+      .body(StringBody(Helper.jsonBody))
+      .asJson
+      .check(status.is(200))
+
+  val tgpapiRemoveSuccess200: HttpRequestBuilder =
+    http("REMOVE TGP Api Record Success Response 200")
+      .patch(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
+      .headers(generateHeaders())
+      .body(StringBody(Helper.jsonBodyRemove))
+      .asJson
+      .check(status.is(200))
+
+  // Additional GET requests
+  val tgpapiGetRecordsPage: HttpRequestBuilder =
+    http("GET TGP Api Records by Page Success Response 200")
+      .get(s"$baseUrl/GB123456789001/records?page=1")
+      .headers(generateHeaders())
+      .check(status.is(200))
+
+  val tgpapiGetRecordsSize: HttpRequestBuilder =
+    http("GET TGP Api Records by Size Success Response 200")
+      .get(s"$baseUrl/GB123456789001/records?size=12")
+      .headers(generateHeaders())
+      .check(status.is(200))
+
+  val tgpapiGetRecordsLastUpdatedDate: HttpRequestBuilder =
+    http("GET TGP Api Records by Last Updated Date Success Response 200")
+      .get(s"$baseUrl/GB123456789001/records?lastUpdatedDate=2024-03-26T16:14:52Z")
+      .headers(generateHeaders())
+      .check(status.is(200))
+
+  val tgpapiGetEori: HttpRequestBuilder =
+    http("GET TGP Api by EORI Success Response 200 ")
+      .get(s"$baseUrl/GB123456789001/records")
+      .headers(generateHeaders())
+      .check(status.is(200))
+
 }
