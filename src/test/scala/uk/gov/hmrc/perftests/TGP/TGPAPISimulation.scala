@@ -19,7 +19,7 @@ package uk.gov.hmrc.perftests.TGP
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.TGP.TGPAPIRequest._
-import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{Identifier, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
+import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{Identifier, Identifier100, Identifier380, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
 
 class TGPAPISimulation extends PerformanceTestRunner {
 
@@ -42,32 +42,43 @@ class TGPAPISimulation extends PerformanceTestRunner {
     }
 
   setup("auth-part", "Create an access token ").withRequests(authRequests(Identifier): _*)
+  setup("auth-part_100", "Create an access token ").withRequests(authRequests(Identifier100): _*)
+  setup("auth-part_380", "Create an access token ").withRequests(authRequests(Identifier380): _*)
 
-  setup("tgp-api-get-single-goods-record-success-200-part", "TGP Get Single Record APi Success Response 200")
+  setup("get-single-200-part", "TGP Get Single Record API Success Response 200")
     .withRequests(tgpapiGetSuccess200)
 
-  setup("tgp-api-get-records-page-part", "GET TGP Api Records by Page -Success Response 200 ")
-    .withRequests(tgpapiGetRecordsPage)
+  setup("get-page-100-part", "GET TGP API Records by Page (100) - Success Response 200")
+    .withRequests(tgpapiGetRecordsPage100)
 
-  setup("tgp-api-get-records-size-100-part", "GET TGP Api Records by Size(100) -Success Response 200")
+  setup("get-page-380-part", "GET TGP API Records by Page (380) - Success Response 200")
+    .withRequests(tgpapiGetRecordsPage380)
+
+  setup("get-size-100-part", "GET TGP API Records by Size (100) - Success Response 200")
     .withRequests(tgpapiGetRecordsSize100)
 
-  setup("tgp-api-get-records-size-380-part", "GET TGP Api Records by Size(380) -Success Response 200")
+  setup("get-size-380-part", "GET TGP API Records by Size (380) - Success Response 200")
     .withRequests(tgpapiGetRecordsSize380)
 
-  setup("tgp-api-get-records-last-updated-date-part", "GET TGP Api Records by Last Updated Date -Success Response 200")
-    .withRequests(tgpapiGetRecordsLastUpdatedDate)
+  setup("get-updated-100-part", "GET TGP API Records by Last Updated Date (100) - Success Response 200")
+    .withRequests(tgpapiGetRecordsLastUpdatedDate100)
 
-  setup("tgp-api-get-record-EORI-part", "GET TGP Api Records by EORI -Success Response 200")
-    .withRequests(tgpapiGetEori)
+  setup("get-updated-380-part", "GET TGP API Records by Last Updated Date (380) - Success Response 200")
+    .withRequests(tgpapiGetRecordsLastUpdatedDate380)
 
-  setup("tgp-api-create-success-201-part", "CREATE TGP Api Record Success Response 201")
+  setup("get-eori-100-part", "GET TGP API Records by EORI (100) - Success Response 200")
+    .withRequests(tgpapiGetEori100)
+
+  setup("get-eori-380-part", "GET TGP API Records by EORI (380) - Success Response 200")
+    .withRequests(tgpapiGetEori380)
+
+  setup("create-201-part", "CREATE TGP API Record Success Response 201")
     .withRequests(tgpapiCreateSuccess201)
 
-  setup("tgp-api-update-success-200-part", "UPDATE TGP Api Record Success Response 200")
+  setup("update-200-part", "UPDATE TGP API Record Success Response 200")
     .withRequests(tgpapiUpdateSuccess200)
 
-  setup("tgp-api-remove-success-200-part", "REMOVE TGP Api Record Success Response 200")
+  setup("remove-200-part", "REMOVE TGP API Record Success Response 200")
     .withRequests(tgpapiRemoveSuccess200)
 
   runSimulation()

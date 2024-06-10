@@ -89,33 +89,52 @@ object TGPAPIRequest extends ServicesConfiguration {
       .check(status.is(200))
 
   // Additional GET requests
-  val tgpapiGetRecordsPage: HttpRequestBuilder =
-    http("GET TGP Api Records by Page Success Response 200")
-      .get(s"$baseUrl/GB123456789001/records?page=1")
+
+  val tgpapiGetRecordsPage100: HttpRequestBuilder =
+    http("GET TGP API Records by Page (100) Success Response 200")
+      .get(s"$baseUrl/GB123456789011/records?page=1")
+      .headers(generateHeaders())
+      .check(status.is(200))
+
+  val tgpapiGetRecordsPage380: HttpRequestBuilder =
+    http("GET TGP API Records by Page (380) Success Response 200")
+      .get(s"$baseUrl/GB123456789012/records?page=1")
       .headers(generateHeaders())
       .check(status.is(200))
 
   val tgpapiGetRecordsSize100: HttpRequestBuilder =
-    http("GET TGP Api Records by Size(100) Success Response 200")
-      .get(s"$baseUrl/GB123456789001/records?size=100")
+    http("GET TGP API Records by Size (100) Success Response 200")
+      .get(s"$baseUrl/GB123456789011/records?size=100")
       .headers(generateHeaders())
       .check(status.is(200))
 
   val tgpapiGetRecordsSize380: HttpRequestBuilder =
-    http("GET TGP Api Records by Size(380) Success Response 200")
-      .get(s"$baseUrl/GB123456789001/records?size=380")
+    http("GET TGP API Records by Size (380) Success Response 200")
+      .get(s"$baseUrl/GB123456789012/records?size=380")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetRecordsLastUpdatedDate: HttpRequestBuilder =
-    http("GET TGP Api Records by Last Updated Date Success Response 200")
-      .get(s"$baseUrl/GB123456789001/records?lastUpdatedDate=2024-03-26T16:14:52Z")
+  val tgpapiGetRecordsLastUpdatedDate100: HttpRequestBuilder =
+    http("GET TGP API Records by Last Updated Date (100) Success Response 200")
+      .get(s"$baseUrl/GB123456789011/records?lastUpdatedDate=2024-03-26T16:14:52Z")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetEori: HttpRequestBuilder =
-    http("GET TGP Api by EORI Success Response 200 ")
-      .get(s"$baseUrl/GB123456789001/records")
+  val tgpapiGetRecordsLastUpdatedDate380: HttpRequestBuilder =
+    http("GET TGP API Records by Last Updated Date (380) Success Response 200")
+      .get(s"$baseUrl/GB123456789012/records?lastUpdatedDate=2024-03-26T16:14:52Z")
+      .headers(generateHeaders())
+      .check(status.is(200))
+
+  val tgpapiGetEori100: HttpRequestBuilder =
+    http("GET TGP API Records by EORI (100) Success Response 200")
+      .get(s"$baseUrl/GB123456789011/records")
+      .headers(generateHeaders())
+      .check(status.is(200))
+
+  val tgpapiGetEori380: HttpRequestBuilder =
+    http("GET TGP API Records by EORI (380) Success Response 200")
+      .get(s"$baseUrl/GB123456789012/records")
       .headers(generateHeaders())
       .check(status.is(200))
 
