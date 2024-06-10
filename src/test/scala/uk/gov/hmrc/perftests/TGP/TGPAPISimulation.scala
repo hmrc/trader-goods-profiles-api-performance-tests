@@ -49,8 +49,11 @@ class TGPAPISimulation extends PerformanceTestRunner {
   setup("tgp-api-get-records-page-part", "GET TGP Api Records by Page -Success Response 200 ")
     .withRequests(tgpapiGetRecordsPage)
 
-  setup("tgp-api-get-records-size-part", "GET TGP Api Records by Size -Success Response 200")
-    .withRequests(tgpapiGetRecordsSize)
+  setup("tgp-api-get-records-size-100-part", "GET TGP Api Records by Size(100) -Success Response 200")
+    .withRequests(tgpapiGetRecordsSize100)
+
+  setup("tgp-api-get-records-size-380-part", "GET TGP Api Records by Size(380) -Success Response 200")
+    .withRequests(tgpapiGetRecordsSize380)
 
   setup("tgp-api-get-records-last-updated-date-part", "GET TGP Api Records by Last Updated Date -Success Response 200")
     .withRequests(tgpapiGetRecordsLastUpdatedDate)
