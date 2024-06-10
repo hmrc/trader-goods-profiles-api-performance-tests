@@ -95,9 +95,15 @@ object TGPAPIRequest extends ServicesConfiguration {
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetRecordsSize: HttpRequestBuilder =
-    http("GET TGP Api Records by Size Success Response 200")
-      .get(s"$baseUrl/GB123456789001/records?size=12")
+  val tgpapiGetRecordsSize100: HttpRequestBuilder =
+    http("GET TGP Api Records by Size(100) Success Response 200")
+      .get(s"$baseUrl/GB123456789001/records?size=100")
+      .headers(generateHeaders())
+      .check(status.is(200))
+
+  val tgpapiGetRecordsSize380: HttpRequestBuilder =
+    http("GET TGP Api Records by Size(380) Success Response 200")
+      .get(s"$baseUrl/GB123456789001/records?size=380")
       .headers(generateHeaders())
       .check(status.is(200))
 
