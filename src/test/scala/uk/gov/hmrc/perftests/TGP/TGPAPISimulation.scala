@@ -23,14 +23,14 @@ import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{EORI, EORIFor100Records, EORIF
 
 class TGPAPISimulation extends PerformanceTestRunner {
 
-  def authRequests(identifier: String): Seq[HttpRequestBuilder] =
+  def authRequests(EORI: String): Seq[HttpRequestBuilder] =
     if (!runLocal) {
       Seq(
         getAuthId,
         getStart,
         getGrantAuthority303,
         getCredentialsPage,
-        authLogin(identifier),
+        authLogin(EORI),
         grantAuthorityRedirect,
         grantAuthorityRedirect2,
         getGrantAuthority200,
@@ -38,7 +38,7 @@ class TGPAPISimulation extends PerformanceTestRunner {
         getAccessTokenGG
       )
     } else {
-      Seq(postAuthLogin(identifier), getSession)
+      Seq(postAuthLogin(EORI), getSession)
     }
 
   setup("auth-part", "Create an access token ").withRequests(authRequests(EORI): _*)
