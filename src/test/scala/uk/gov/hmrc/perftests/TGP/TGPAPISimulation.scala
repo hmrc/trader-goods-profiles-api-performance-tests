@@ -45,7 +45,7 @@ class TGPAPISimulation extends PerformanceTestRunner {
   setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EoriFor100Records): _*)
   setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EoriFor380Records): _*)
 
-  setup("get-single-goods-record-200-part", "Get Single Record - Success Response 200")
+  setup("get-single-goods-record-part", "Get Single Record - Success Response 200")
     .withRequests(getSingleGoodsRecord)
 
   setup("get-100-goods-records-by-page-part", "GET (100) Records by Page - Success Response 200")
