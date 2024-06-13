@@ -42,9 +42,9 @@ object TGPAuthRequests extends ServicesConfiguration {
   lazy val redirectionUrl  = s"$authBaseUrl/auth-login-stub/session"
   lazy val scope: String   = "trader-goods-profiles"
 
-  final val Identifier                                              = "GB123456789001"
-  final val Identifier100                                           = "GB123456789011"
-  final val Identifier380                                           = "GB123456789012"
+  final val Eori                                                    = "GB123456789001"
+  final val EoriFor100Records                                       = "GB123456789011"
+  final val EoriFor380Records                                       = "GB123456789012"
   def saveCsrfToken(): CheckBuilder[RegexCheckType, String, String] = regex(_ => CsrfPattern).saveAs("csrfToken")
 
   def getAuthId: HttpRequestBuilder =

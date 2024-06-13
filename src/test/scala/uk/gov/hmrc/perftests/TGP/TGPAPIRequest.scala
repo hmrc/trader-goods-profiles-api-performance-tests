@@ -58,13 +58,13 @@ object TGPAPIRequest extends ServicesConfiguration {
         X_CLIENT_ID_HEADER.toString   -> "test"
       )
 
-  val tgpapiGetSuccess200: HttpRequestBuilder =
+  val getSingleGoodsRecord: HttpRequestBuilder =
     http("TGP GET single Record Api Success Response 200")
-      .get(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
+      .get(s"$baseUrl/GB123456789001/records/b2fa315b-2d31-4629-90fc-a7b1a5119873")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiCreateSuccess201: HttpRequestBuilder =
+  val createGoodsRecords: HttpRequestBuilder =
     http("CREATE TGP Api Record Success Response 201")
       .post(s"$baseUrl/GB123456789001/records")
       .headers(generateHeaders())
@@ -72,7 +72,7 @@ object TGPAPIRequest extends ServicesConfiguration {
       .asJson
       .check(status.is(201))
 
-  val tgpapiUpdateSuccess200: HttpRequestBuilder =
+  val updateGoodsRecords: HttpRequestBuilder =
     http("UPDATE TGP Api Record Success Response 200")
       .patch(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
       .headers(generateHeaders())
@@ -80,9 +80,9 @@ object TGPAPIRequest extends ServicesConfiguration {
       .asJson
       .check(status.is(200))
 
-  val tgpapiRemoveSuccess200: HttpRequestBuilder =
+  val removeGoodsRecords: HttpRequestBuilder =
     http("REMOVE TGP Api Record Success Response 200")
-      .patch(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
+      .patch(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f?actorid=GB123456789001")
       .headers(generateHeaders())
       .body(StringBody(Helper.jsonBodyRemove))
       .asJson
@@ -90,49 +90,49 @@ object TGPAPIRequest extends ServicesConfiguration {
 
   // Additional GET requests
 
-  val tgpapiGetRecordsPage100: HttpRequestBuilder =
+  val get100GoodsRecordsByPage: HttpRequestBuilder =
     http("GET TGP API Records by Page (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?page=1")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetRecordsPage380: HttpRequestBuilder =
+  val get380GoodsRecordsByPage: HttpRequestBuilder =
     http("GET TGP API Records by Page (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?page=1")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetRecordsSize100: HttpRequestBuilder =
+  val get100GoodsRecordsBySize: HttpRequestBuilder =
     http("GET TGP API Records by Size (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?size=100")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetRecordsSize380: HttpRequestBuilder =
+  val get380GoodsRecordsBySize: HttpRequestBuilder =
     http("GET TGP API Records by Size (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?size=380")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetRecordsLastUpdatedDate100: HttpRequestBuilder =
+  val get100goodsRecordsByDate: HttpRequestBuilder =
     http("GET TGP API Records by Last Updated Date (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?lastUpdatedDate=2024-03-26T16:14:52Z")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetRecordsLastUpdatedDate380: HttpRequestBuilder =
+  val get380GoodsRecordsByDate: HttpRequestBuilder =
     http("GET TGP API Records by Last Updated Date (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?lastUpdatedDate=2024-03-26T16:14:52Z")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetEori100: HttpRequestBuilder =
+  val get100GoodsRecordsByEori: HttpRequestBuilder =
     http("GET TGP API Records by EORI (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val tgpapiGetEori380: HttpRequestBuilder =
+  val get380GoodsRecordsByEori: HttpRequestBuilder =
     http("GET TGP API Records by EORI (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records")
       .headers(generateHeaders())

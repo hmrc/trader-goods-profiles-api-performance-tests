@@ -19,7 +19,7 @@ package uk.gov.hmrc.perftests.TGP
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.TGP.TGPAPIRequest._
-import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{Identifier, Identifier100, Identifier380, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
+import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{Eori, EoriFor100Records, EoriFor380Records, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
 
 class TGPAPISimulation extends PerformanceTestRunner {
 
@@ -41,45 +41,45 @@ class TGPAPISimulation extends PerformanceTestRunner {
       Seq(postAuthLogin(identifier), getSession)
     }
 
-  setup("auth-part", "Create an access token ").withRequests(authRequests(Identifier): _*)
-  setup("auth-part_100", "Create an access token ").withRequests(authRequests(Identifier100): _*)
-  setup("auth-part_380", "Create an access token ").withRequests(authRequests(Identifier380): _*)
+  setup("auth-part", "Create an access token ").withRequests(authRequests(Eori): _*)
+  setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EoriFor100Records): _*)
+  setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EoriFor380Records): _*)
 
-  setup("get-single-200-part", "TGP Get Single Record API Success Response 200")
-    .withRequests(tgpapiGetSuccess200)
+  setup("get-single-goods-record-200-part", "Get Single Record - Success Response 200")
+    .withRequests(getSingleGoodsRecord)
 
-  setup("get-page-100-part", "GET TGP API Records by Page (100) - Success Response 200")
-    .withRequests(tgpapiGetRecordsPage100)
+  setup("get-100-goods-records-by-page-part", "GET (100) Records by Page - Success Response 200")
+    .withRequests(get100GoodsRecordsByPage)
 
-  setup("get-page-380-part", "GET TGP API Records by Page (380) - Success Response 200")
-    .withRequests(tgpapiGetRecordsPage380)
+  setup("get-380-goods-records-by-page-part", "GET (380) goods records by Page - Success Response 200")
+    .withRequests(get380GoodsRecordsByPage)
 
-  setup("get-size-100-part", "GET TGP API Records by Size (100) - Success Response 200")
-    .withRequests(tgpapiGetRecordsSize100)
+  setup("get-100-goods-records-by-size-part", "GET (100) goods records by Size - Success Response 200")
+    .withRequests(get100GoodsRecordsBySize)
 
-  setup("get-size-380-part", "GET TGP API Records by Size (380) - Success Response 200")
-    .withRequests(tgpapiGetRecordsSize380)
+  setup("get-380-goods-records-by-size-part", "GET (380) goods records by Size - Success Response 200")
+    .withRequests(get380GoodsRecordsBySize)
 
-  setup("get-updated-100-part", "GET TGP API Records by Last Updated Date (100) - Success Response 200")
-    .withRequests(tgpapiGetRecordsLastUpdatedDate100)
+  setup("get-100-goods-records-by-date-part", "GET (100) goods Records by Date - Success Response 200")
+    .withRequests(get100goodsRecordsByDate)
 
-  setup("get-updated-380-part", "GET TGP API Records by Last Updated Date (380) - Success Response 200")
-    .withRequests(tgpapiGetRecordsLastUpdatedDate380)
+  setup("get-380-goods-records-by-date-part", "GET (380) goods records by Date - Success Response 200")
+    .withRequests(get380GoodsRecordsByDate)
 
-  setup("get-eori-100-part", "GET TGP API Records by EORI (100) - Success Response 200")
-    .withRequests(tgpapiGetEori100)
+  setup("get-100-goods-records-by-eori-part", "GET (100) goods records by EORI - Success Response 200")
+    .withRequests(get100GoodsRecordsByEori)
 
-  setup("get-eori-380-part", "GET TGP API Records by EORI (380) - Success Response 200")
-    .withRequests(tgpapiGetEori380)
+  setup("get-380-goods-records-by-eori-part", "GET (380) goods records by EORI - Success Response 200")
+    .withRequests(get380GoodsRecordsByEori)
 
-  setup("create-201-part", "CREATE TGP API Record Success Response 201")
-    .withRequests(tgpapiCreateSuccess201)
+  setup("create-goods-records-part", "CREATE goods records - Success Response 201")
+    .withRequests(createGoodsRecords)
 
-  setup("update-200-part", "UPDATE TGP API Record Success Response 200")
-    .withRequests(tgpapiUpdateSuccess200)
+  setup("update-goods-records-part", "UPDATE goods records - Success Response 200")
+    .withRequests(updateGoodsRecords)
 
-  setup("remove-200-part", "REMOVE TGP API Record Success Response 200")
-    .withRequests(tgpapiRemoveSuccess200)
+  setup("remove-goods-records-part", "REMOVE goods records - Success Response 200")
+    .withRequests(removeGoodsRecords)
 
   runSimulation()
 }
