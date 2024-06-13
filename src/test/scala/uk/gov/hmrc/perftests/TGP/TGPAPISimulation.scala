@@ -19,7 +19,7 @@ package uk.gov.hmrc.perftests.TGP
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.TGP.TGPAPIRequest._
-import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{Eori, EoriFor100Records, EoriFor380Records, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
+import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{EORI, EORIFor100Records, EORIFor380Records, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
 
 class TGPAPISimulation extends PerformanceTestRunner {
 
@@ -41,9 +41,9 @@ class TGPAPISimulation extends PerformanceTestRunner {
       Seq(postAuthLogin(identifier), getSession)
     }
 
-  setup("auth-part", "Create an access token ").withRequests(authRequests(Eori): _*)
-  setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EoriFor100Records): _*)
-  setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EoriFor380Records): _*)
+  setup("auth-part", "Create an access token ").withRequests(authRequests(EORI): _*)
+  setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EORIFor100Records): _*)
+  setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EORIFor380Records): _*)
 
   setup("get-single-goods-record-part", "Get Single Record - Success Response 200")
     .withRequests(getSingleGoodsRecord)
@@ -66,11 +66,11 @@ class TGPAPISimulation extends PerformanceTestRunner {
   setup("get-380-goods-records-by-date-part", "GET (380) goods records by Date - Success Response 200")
     .withRequests(get380GoodsRecordsByDate)
 
-  setup("get-100-goods-records-by-eori-part", "GET (100) goods records by EORI - Success Response 200")
-    .withRequests(get100GoodsRecordsByEori)
+  setup("get-100-goods-records-by-EORI-part", "GET (100) goods records by EORI - Success Response 200")
+    .withRequests(get100GoodsRecordsByEORI)
 
-  setup("get-380-goods-records-by-eori-part", "GET (380) goods records by EORI - Success Response 200")
-    .withRequests(get380GoodsRecordsByEori)
+  setup("get-380-goods-records-by-EORI-part", "GET (380) goods records by EORI - Success Response 200")
+    .withRequests(get380GoodsRecordsByEORI)
 
   setup("create-goods-records-part", "CREATE goods records - Success Response 201")
     .withRequests(createGoodsRecords)

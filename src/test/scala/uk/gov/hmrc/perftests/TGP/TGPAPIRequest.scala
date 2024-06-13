@@ -126,13 +126,13 @@ object TGPAPIRequest extends ServicesConfiguration {
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val get100GoodsRecordsByEori: HttpRequestBuilder =
+  val get100GoodsRecordsByEORI: HttpRequestBuilder =
     http("GET TGP API Records by EORI (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records")
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val get380GoodsRecordsByEori: HttpRequestBuilder =
+  val get380GoodsRecordsByEORI: HttpRequestBuilder =
     http("GET TGP API Records by EORI (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records")
       .headers(generateHeaders())

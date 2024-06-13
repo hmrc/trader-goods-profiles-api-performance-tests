@@ -42,9 +42,9 @@ object TGPAuthRequests extends ServicesConfiguration {
   lazy val redirectionUrl  = s"$authBaseUrl/auth-login-stub/session"
   lazy val scope: String   = "trader-goods-profiles"
 
-  final val Eori                                                    = "GB123456789001"
-  final val EoriFor100Records                                       = "GB123456789011"
-  final val EoriFor380Records                                       = "GB123456789012"
+  final val EORI                                                    = "GB123456789001"
+  final val EORIFor100Records                                       = "GB123456789011"
+  final val EORIFor380Records                                       = "GB123456789012"
   def saveCsrfToken(): CheckBuilder[RegexCheckType, String, String] = regex(_ => CsrfPattern).saveAs("csrfToken")
 
   def getAuthId: HttpRequestBuilder =
@@ -60,7 +60,7 @@ object TGPAuthRequests extends ServicesConfiguration {
       )
       .check(header("Location").is("/oauth/start?auth_id=${auth_id}"))
 
-  def postAuthLogin(Eori: String): HttpRequestBuilder =
+  def postAuthLogin(EORI: String): HttpRequestBuilder =
     http("Enter Auth login credentials ")
       .post(authUrl)
       .formParam("redirectionUrl", redirectionUrl)
@@ -70,7 +70,7 @@ object TGPAuthRequests extends ServicesConfiguration {
       .formParam("affinityGroup", "Organisation")
       .formParam("enrolment[0].name", "HMRC-CUS-ORG")
       .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
-      .formParam("enrolment[0].taxIdentifier[0].value", Eori)
+      .formParam("enrolment[0].taxIdentifier[0].value", EORI)
       .formParam("enrolment[0].state", "Activated")
       .check(status.is(303))
       .check(bodyString.saveAs("responseBody"))
@@ -112,7 +112,7 @@ object TGPAuthRequests extends ServicesConfiguration {
       .get(baseUrl_Auth + "/auth-login-stub/gg-sign-in")
       .check(status.is(200))
 
-  def authLogin(Eori: String): HttpRequestBuilder =
+  def authLogin(EORI: String): HttpRequestBuilder =
     http("login Step")
       .post(baseUrl_Auth + "/auth-login-stub/gg-sign-in")
       .formParam("redirectionUrl", "/oauth/grantscope?auth_id=${auth_id}")
@@ -122,7 +122,7 @@ object TGPAuthRequests extends ServicesConfiguration {
       .formParam("affinityGroup", "Organisation")
       .formParam("enrolment[0].name", "HMRC-CUS-ORG")
       .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
-      .formParam("enrolment[0].taxIdentifier[0].value", Eori)
+      .formParam("enrolment[0].taxIdentifier[0].value", EORI)
       .formParam("enrolment[0].state", "Activated")
       .check(status.is(303))
 
