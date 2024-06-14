@@ -81,11 +81,27 @@ object TGPAPIRequest extends ServicesConfiguration {
       .check(status.is(200))
 
   val removeGoodsRecords: HttpRequestBuilder =
-    http("REMOVE TGP Api Record Success Response 200")
+    http("REMOVE TGP Api Record Success Response 204")
       .delete(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f?actorId=GB123456789001")
       .headers(generateHeaders())
       .asJson
       .check(status.is(204))
+
+  val askHmrcAdvice: HttpRequestBuilder =
+    http("Ask HMRC advice Success Response 201")
+      .post(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f/advice")
+      .headers(generateHeaders())
+      .body(StringBody(Helper.jsonBodyAskHmrcAdvice))
+      .asJson
+      .check(status.is(201))
+
+  val maintainGoodsProfile: HttpRequestBuilder =
+    http("Maintain goods profile Success Response 200")
+      .put(s"$baseUrl/GB123456789001")
+      .headers(generateHeaders())
+      .body(StringBody(Helper.jsonBodyMaintainGoodsProfile))
+      .asJson
+      .check(status.is(200))
 
   // Additional GET requests
 

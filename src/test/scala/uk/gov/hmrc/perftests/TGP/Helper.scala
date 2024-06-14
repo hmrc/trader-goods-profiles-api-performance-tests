@@ -28,6 +28,8 @@ object Helper {
       source.close()
   }
 
-  val jsonBody: String       = withFileAsString("src/test/resources/data/Create.json")
-  val jsonBodyRemove: String = withFileAsString("src/test/resources/data/Remove.json")
+  val jsonBody: String                     = withFileAsString("src/test/resources/data/Create.json")
+  val jsonBodyRemove: String               = withFileAsString("src/test/resources/data/Remove.json")
+  val jsonBodyAskHmrcAdvice: String        = withFileAsString("src/test/resources/data/AskHmrcAdvice.json")
+  val jsonBodyMaintainGoodsProfile: String = withFileAsString("src/test/resources/data/MaintainGoodsProfile.json")
 }
