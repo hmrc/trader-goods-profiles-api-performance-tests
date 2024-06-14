@@ -82,7 +82,7 @@ object TGPAPIRequest extends ServicesConfiguration {
 
   val removeGoodsRecords: HttpRequestBuilder =
     http("REMOVE TGP Api Record Success Response 200")
-      .patch(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f?actorid=GB123456789001")
+      .delete(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f?actorid=GB123456789001")
       .headers(generateHeaders())
       .body(StringBody(Helper.jsonBodyRemove))
       .asJson

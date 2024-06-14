@@ -124,7 +124,7 @@ object TGPAuthRequests extends ServicesConfiguration {
       .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
       .formParam("enrolment[0].taxIdentifier[0].value", EORI)
       .formParam("enrolment[0].state", "Activated")
-      //.check(status.is(303))
+      .check(status.is(303))
 
   def grantAuthorityRedirect: HttpRequestBuilder =
     http("get Grant Authority 2nd Redirect")
