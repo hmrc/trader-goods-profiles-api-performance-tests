@@ -78,8 +78,14 @@ class TGPAPISimulation extends PerformanceTestRunner {
   setup("update-goods-records-part", "UPDATE goods records - Success Response 200")
     .withRequests(updateGoodsRecords)
 
-  setup("remove-goods-records-part", "REMOVE goods records - Success Response 200")
+  setup("remove-goods-records-part", "REMOVE goods records - Success Response 204")
     .withRequests(removeGoodsRecords)
+
+  setup("ask-hmrc-advice-part", "Ask HMRC advice - Success Response 201")
+    .withRequests(askHmrcAdvice)
+
+  setup("maintain-goods-profile-part", "Maintain goods profile - Success Response 200")
+    .withRequests(maintainGoodsProfile)
 
   runSimulation()
 }
