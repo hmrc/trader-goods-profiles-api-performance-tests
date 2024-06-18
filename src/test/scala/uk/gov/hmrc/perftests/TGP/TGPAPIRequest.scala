@@ -129,7 +129,7 @@ object TGPAPIRequest extends ServicesConfiguration {
       .headers(generateHeaders())
       .check(status.is(200))
 
-  val get100goodsRecordsByDate: HttpRequestBuilder =
+  val get100GoodsRecordsByDate: HttpRequestBuilder =
     http("GET TGP API Records by Last Updated Date (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?lastUpdatedDate=2024-03-26T16:14:52Z")
       .headers(generateHeaders())
