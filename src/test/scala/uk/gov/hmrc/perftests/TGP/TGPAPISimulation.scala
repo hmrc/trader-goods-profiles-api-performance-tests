@@ -45,6 +45,41 @@ class TGPAPISimulation extends PerformanceTestRunner {
   setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EORIFor100Records): _*)
   setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EORIFor380Records): _*)
 
+  setup(
+    "trader-goods-profiles-Get-Create-Update-Remove-Ask advice-Maintain profile-record-part",
+    "Get,Create,Update, Remove,Ask HMRC advice and Maintain goods profile- Success Response 200"
+  )
+    .withRequests(
+      getSingleGoodsRecord,
+      createGoodsRecords,
+      updateGoodsRecords,
+      removeGoodsRecords,
+      askHmrcAdvice,
+      maintainGoodsProfile
+    )
+
+  setup(
+    "get-100-goods-records-by-page-size-date-EORI-part",
+    "GET (100) Records by Page,Size,Date,EORI - Success Response 200"
+  )
+    .withRequests(
+      get100GoodsRecordsByPage,
+      get100GoodsRecordsBySize,
+      get100GoodsRecordsByDate,
+      get100GoodsRecordsByEORI
+    )
+
+  setup(
+    "get-380-goods-records-by-page-size-date-EORI-part",
+    "GET (380) Records by Page,Size,Date,EORI - Success Response 200"
+  )
+    .withRequests(
+      get380GoodsRecordsByPage,
+      get380GoodsRecordsBySize,
+      get380GoodsRecordsByDate,
+      get380GoodsRecordsByEORI
+    )
+
   setup("get-single-goods-record-part", "Get Single Record - Success Response 200")
     .withRequests(getSingleGoodsRecord)
 
@@ -61,7 +96,7 @@ class TGPAPISimulation extends PerformanceTestRunner {
     .withRequests(get380GoodsRecordsBySize)
 
   setup("get-100-goods-records-by-date-part", "GET (100) goods Records by Date - Success Response 200")
-    .withRequests(get100goodsRecordsByDate)
+    .withRequests(get100GoodsRecordsByDate)
 
   setup("get-380-goods-records-by-date-part", "GET (380) goods records by Date - Success Response 200")
     .withRequests(get380GoodsRecordsByDate)
