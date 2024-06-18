@@ -80,47 +80,5 @@ class TGPAPISimulation extends PerformanceTestRunner {
       get380GoodsRecordsByEORI
     )
 
-  setup("get-single-goods-record-part", "Get Single Record - Success Response 200")
-    .withRequests(getSingleGoodsRecord)
-
-  setup("get-100-goods-records-by-page-part", "GET (100) Records by Page - Success Response 200")
-    .withRequests(get100GoodsRecordsByPage)
-
-  setup("get-380-goods-records-by-page-part", "GET (380) goods records by Page - Success Response 200")
-    .withRequests(get380GoodsRecordsByPage)
-
-  setup("get-100-goods-records-by-size-part", "GET (100) goods records by Size - Success Response 200")
-    .withRequests(get100GoodsRecordsBySize)
-
-  setup("get-380-goods-records-by-size-part", "GET (380) goods records by Size - Success Response 200")
-    .withRequests(get380GoodsRecordsBySize)
-
-  setup("get-100-goods-records-by-date-part", "GET (100) goods Records by Date - Success Response 200")
-    .withRequests(get100GoodsRecordsByDate)
-
-  setup("get-380-goods-records-by-date-part", "GET (380) goods records by Date - Success Response 200")
-    .withRequests(get380GoodsRecordsByDate)
-
-  setup("get-100-goods-records-by-EORI-part", "GET (100) goods records by EORI - Success Response 200")
-    .withRequests(get100GoodsRecordsByEORI)
-
-  setup("get-380-goods-records-by-EORI-part", "GET (380) goods records by EORI - Success Response 200")
-    .withRequests(get380GoodsRecordsByEORI)
-
-  setup("create-goods-records-part", "CREATE goods records - Success Response 201")
-    .withRequests(createGoodsRecords)
-
-  setup("update-goods-records-part", "UPDATE goods records - Success Response 200")
-    .withRequests(updateGoodsRecords)
-
-  setup("remove-goods-records-part", "REMOVE goods records - Success Response 204")
-    .withRequests(removeGoodsRecords)
-
-  setup("ask-hmrc-advice-part", "Ask HMRC advice - Success Response 201")
-    .withRequests(askHmrcAdvice)
-
-  setup("maintain-goods-profile-part", "Maintain goods profile - Success Response 200")
-    .withRequests(maintainGoodsProfile)
-
   runSimulation()
 }
