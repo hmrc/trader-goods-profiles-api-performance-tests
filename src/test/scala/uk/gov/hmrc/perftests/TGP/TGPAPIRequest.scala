@@ -58,10 +58,25 @@ object TGPAPIRequest extends ServicesConfiguration {
         X_CLIENT_ID_HEADER.toString   -> "test"
       )
 
+  def generateHeadersWithoutContentType(
+    acceptHeader: String = CUSTOM_ACCEPT_HEADER
+  ): Map[String, String] =
+    if (!runLocal)
+      Map(
+        AUTHORIZATION_HEADER.toString -> s"Bearer $bearerToken",
+        ACCEPT_HEADER.toString        -> acceptHeader
+      )
+    else
+      Map(
+        AUTHORIZATION_HEADER.toString -> bearerToken,
+        ACCEPT_HEADER.toString        -> acceptHeader,
+        X_CLIENT_ID_HEADER.toString   -> "test"
+      )
+
   val getSingleGoodsRecord: HttpRequestBuilder =
     http("TGP GET single Record Api Success Response 200")
       .get(s"$baseUrl/GB123456789001/records/b2fa315b-2d31-4629-90fc-a7b1a5119873")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
   val createGoodsRecords: HttpRequestBuilder =
@@ -108,49 +123,49 @@ object TGPAPIRequest extends ServicesConfiguration {
   val get100GoodsRecordsByPage: HttpRequestBuilder =
     http("GET TGP API Records by Page (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?page=1")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
   val get380GoodsRecordsByPage: HttpRequestBuilder =
     http("GET TGP API Records by Page (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?page=1")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
   val get100GoodsRecordsBySize: HttpRequestBuilder =
     http("GET TGP API Records by Size (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?size=100")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
   val get380GoodsRecordsBySize: HttpRequestBuilder =
     http("GET TGP API Records by Size (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?size=380")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
   val get100GoodsRecordsByDate: HttpRequestBuilder =
     http("GET TGP API Records by Last Updated Date (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?lastUpdatedDate=2024-03-26T16:14:52Z")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
   val get380GoodsRecordsByDate: HttpRequestBuilder =
     http("GET TGP API Records by Last Updated Date (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?lastUpdatedDate=2024-03-26T16:14:52Z")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
   val get100GoodsRecordsByEORI: HttpRequestBuilder =
     http("GET TGP API Records by EORI (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
   val get380GoodsRecordsByEORI: HttpRequestBuilder =
     http("GET TGP API Records by EORI (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records")
-      .headers(generateHeaders())
+      .headers(generateHeadersWithoutContentType())
       .check(status.is(200))
 
 }
