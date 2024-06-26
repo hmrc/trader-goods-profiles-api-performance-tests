@@ -50,12 +50,12 @@ class TGPAPISimulation extends PerformanceTestRunner {
     "Get,Create,Update, Remove,Ask HMRC advice and Maintain goods profile- Success Response 200"
   )
     .withRequests(
-      getSingleGoodsRecord
-//      createGoodsRecords,
-//      updateGoodsRecords,
-//      removeGoodsRecords,
-//      askHmrcAdvice,
-//      maintainGoodsProfile
+      getSingleGoodsRecord,
+      createGoodsRecords,
+      updateGoodsRecords,
+      removeGoodsRecords,
+      askHmrcAdvice,
+      maintainGoodsProfile
     )
 
   setup(
