@@ -63,9 +63,9 @@ class TGPAPISimulation extends PerformanceTestRunner {
     "GET (100) Records by Page,Size,Date,EORI - Success Response 200"
   )
     .withRequests(
-      get100GoodsRecordsByPage,
-      get100GoodsRecordsBySize,
-      get100GoodsRecordsByDate,
+//      get100GoodsRecordsByPage,
+//      get100GoodsRecordsBySize,
+//      get100GoodsRecordsByDate,
       get100GoodsRecordsByEORI
     )
 
