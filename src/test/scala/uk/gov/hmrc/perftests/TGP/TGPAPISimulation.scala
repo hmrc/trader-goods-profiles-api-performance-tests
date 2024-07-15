@@ -19,7 +19,7 @@ package uk.gov.hmrc.perftests.TGP
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.TGP.TGPAPIRequest._
-import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{EORI, EORIFor100Records, EORIFor380Records, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
+import uk.gov.hmrc.perftests.TGP.TGPAuthRequests._
 
 class TGPAPISimulation extends PerformanceTestRunner {
 
@@ -41,13 +41,17 @@ class TGPAPISimulation extends PerformanceTestRunner {
       Seq(postAuthLogin(EORI), getSession)
     }
 
-  setup("auth-part", "Create an access token ").withRequests(authRequests(EORI): _*)
-  setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EORIFor100Records): _*)
-  setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EORIFor380Records): _*)
+  before(
+    authRequests(EORI)
+  )
+
+//  setup("auth-part", "Create an access token ").withRequests(authRequests(EORI): _*)
+//  setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EORIFor100Records): _*)
+//  setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EORIFor380Records): _*)
 
   setup(
-    "trader-goods-profiles-Get-Create-Update-Remove-Ask advice-Maintain profile-record-part",
-    "Get,Create,Update, Remove,Ask HMRC advice and Maintain goods profile- Success Response 200"
+    "trader-goods-profiles-Get-Create-Update-Remove-Ask-advice-Maintain-profile-record-part",
+    "Get, Create, Update, Remove, Ask HMRC advice and Maintain goods profile - Success Response 200"
   )
     .withRequests(
       getSingleGoodsRecord,
