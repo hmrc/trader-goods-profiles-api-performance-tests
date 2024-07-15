@@ -42,7 +42,7 @@ class TGPAPISimulation extends PerformanceTestRunner {
     }
 
   before(
-    authRequests(EORI)
+    getAuthToken()
   )
 
 //  setup("auth-part", "Create an access token ").withRequests(authRequests(EORI): _*)

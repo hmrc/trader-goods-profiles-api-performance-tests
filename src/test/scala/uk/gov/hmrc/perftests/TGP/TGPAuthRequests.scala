@@ -23,28 +23,72 @@ import io.gatling.core.check.regex.RegexCheckType
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import jodd.lagarto.dom.NodeSelector
+import play.api.libs.json.Json
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
+import uk.gov.hmrc.perftests.TGP.Global.{authApiBaseUrl, wsClient}
 
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
 import scala.util.matching.UnanchoredRegex
 
 object TGPAuthRequests extends ServicesConfiguration {
-  lazy val CsrfPattern                  = """<input type="hidden" name="csrfToken" value="([^"]+)""""
-  lazy val baseUrl_Auth: String         = baseUrlFor("auth-login-stub")
-  lazy val baseUrl_Auth_Token: String   = baseUrlFor("tgp-api")
+  lazy val CsrfPattern                = """<input type="hidden" name="csrfToken" value="([^"]+)""""
+  lazy val baseUrl_Auth: String       = baseUrlFor("auth-login-stub")
+  lazy val baseUrl_Auth_Token: String = baseUrlFor("tgp-api")
+  lazy val stubBaseUrl: String        = baseUrlFor("auth-login-stub")
+
   lazy val jsonPattern: UnanchoredRegex = """\{"\w+":"([^"]+)""".r.unanchored
 
   lazy val clientId             = "F2B062wphrSO6lV6bQB257vvd97B"
   lazy val clientSecret: String = "b8899bac-403f-4fc1-b5fe-3a2f3b993681"
   lazy val redirectUri: String  = "urn:ietf:wg:oauth:2.0:oob"
-  lazy val authBaseUrl: String  = baseUrlFor("auth-login-stub")
 
-  lazy val authUrl: String = s"$authBaseUrl/auth-login-stub/gg-sign-in"
-  lazy val redirectionUrl  = s"$authBaseUrl/auth-login-stub/session"
-  lazy val scope: String   = "trader-goods-profiles"
+  lazy val authUrl: String     = s"$stubBaseUrl/auth-login-stub/gg-sign-in"
+  lazy val redirectUrl: String = s"$stubBaseUrl/auth-login-stub/session"
 
-  final val EORI                                                    = "GB123456789001"
-  final val EORIFor100Records                                       = "GB123456789011"
-  final val EORIFor380Records                                       = "GB123456789012"
+  val authApiUrl: String = s"$authApiBaseUrl/government-gateway/session/login"
+  lazy val scope: String = "trader-goods-profiles"
+
+  final val EORI              = "GB123456789001"
+  final val EORIFor100Records = "GB123456789011"
+  final val EORIFor380Records = "GB123456789012"
+
+  def getAuthToken(): Unit = {
+    val response = Await.result(
+      wsClient
+        .url(authApiUrl)
+        .post(
+          Json.obj(
+            "affinityGroup"      -> "Organisation",
+            "credentialStrength" -> "strong",
+            "confidenceLevel"    -> 50,
+            "credentialRole"     -> "Admin",
+            "enrolments"         -> Seq(
+              Json.obj(
+                "key"         -> "HMRC-CUS-ORG",
+                "identifiers" -> Seq(
+                  Json.obj(
+                    "key"   -> "EORINumber",
+                    "value" -> EORI
+                  )
+                ),
+                "state"       -> "Activated"
+              )
+            )
+          )
+        ),
+      5.seconds
+    )
+    require(response.status == 201, "Unable to create auth token")
+
+    val authHeader =
+      response.headers.getOrElse(HttpHeaderNames.Authorization.toString, "unable to get auth header").toString
+
+    css(authHeader)
+      .saveAs("accessToken")
+  }
+
   def saveCsrfToken(): CheckBuilder[RegexCheckType, String, String] = regex(_ => CsrfPattern).saveAs("csrfToken")
 
   def getAuthId: HttpRequestBuilder =
@@ -63,7 +107,7 @@ object TGPAuthRequests extends ServicesConfiguration {
   def postAuthLogin(EORI: String): HttpRequestBuilder =
     http("Enter Auth login credentials ")
       .post(authUrl)
-      .formParam("redirectionUrl", redirectionUrl)
+      .formParam("redirectionUrl", redirectUrl)
       .formParam("authorityId", "")
       .formParam("credentialStrength", "strong")
       .formParam("confidenceLevel", "50")
@@ -77,7 +121,7 @@ object TGPAuthRequests extends ServicesConfiguration {
 
   val getSession: HttpRequestBuilder =
     http("Get auth login stub session information")
-      .get(redirectionUrl)
+      .get(redirectUrl)
       .check(status.is(200))
       .check(saveBearerToken)
 
