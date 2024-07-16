@@ -41,25 +41,23 @@ class TGPAPISimulation extends PerformanceTestRunner {
       Seq(postAuthLogin(EORI), getSession)
     }
 
-  before(
-    getAuthToken()
-  )
+  var authToken = ""
 
-//  setup("auth-part", "Create an access token ").withRequests(authRequests(EORI): _*)
-//  setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EORIFor100Records): _*)
-//  setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EORIFor380Records): _*)
+  before {
+    authToken = getAuthToken(EORI)
+  }
 
   setup(
     "trader-goods-profiles-Get-Create-Update-Remove-Ask-advice-Maintain-profile-record-part",
     "Get, Create, Update, Remove, Ask HMRC advice and Maintain goods profile - Success Response 200"
   )
     .withRequests(
-      getSingleGoodsRecord,
-      createGoodsRecords,
-      updateGoodsRecords,
-      removeGoodsRecords,
-      askHmrcAdvice,
-      maintainGoodsProfile
+      getSingleGoodsRecord(authToken),
+      createGoodsRecords(authToken),
+      updateGoodsRecords(authToken),
+      removeGoodsRecords(authToken),
+      askHmrcAdvice(authToken),
+      maintainGoodsProfile(authToken)
     )
 
   setup(
@@ -67,10 +65,10 @@ class TGPAPISimulation extends PerformanceTestRunner {
     "GET (100) Records by Page,Size,Date,EORI - Success Response 200"
   )
     .withRequests(
-      get100GoodsRecordsByPage,
-      get100GoodsRecordsBySize,
-      get100GoodsRecordsByDate,
-      get100GoodsRecordsByEORI
+      get100GoodsRecordsByPage(authToken),
+      get100GoodsRecordsBySize(authToken),
+      get100GoodsRecordsByDate(authToken),
+      get100GoodsRecordsByEORI(authToken)
     )
 
   setup(
@@ -78,10 +76,10 @@ class TGPAPISimulation extends PerformanceTestRunner {
     "GET (380) Records by Page,Size,Date,EORI - Success Response 200"
   )
     .withRequests(
-      get380GoodsRecordsByPage,
-      get380GoodsRecordsBySize,
-      get380GoodsRecordsByDate,
-      get380GoodsRecordsByEORI
+      get380GoodsRecordsByPage(authToken),
+      get380GoodsRecordsBySize(authToken),
+      get380GoodsRecordsByDate(authToken),
+      get380GoodsRecordsByEORI(authToken)
     )
 
   runSimulation()

@@ -20,6 +20,7 @@ import io.gatling.core.Predef._
 import io.gatling.core.check.CheckBuilder
 import io.gatling.core.check.css.CssCheckType
 import io.gatling.core.check.regex.RegexCheckType
+import io.gatling.http.HeaderNames.Authorization
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import jodd.lagarto.dom.NodeSelector
@@ -37,6 +38,7 @@ object TGPAuthRequests extends ServicesConfiguration {
   lazy val baseUrl_Auth: String       = baseUrlFor("auth-login-stub")
   lazy val baseUrl_Auth_Token: String = baseUrlFor("tgp-api")
   lazy val stubBaseUrl: String        = baseUrlFor("auth-login-stub")
+  private val authApiUrl: String      = s"$authApiBaseUrl/government-gateway/session/login"
 
   lazy val jsonPattern: UnanchoredRegex = """\{"\w+":"([^"]+)""".r.unanchored
 
@@ -47,14 +49,13 @@ object TGPAuthRequests extends ServicesConfiguration {
   lazy val authUrl: String     = s"$stubBaseUrl/auth-login-stub/gg-sign-in"
   lazy val redirectUrl: String = s"$stubBaseUrl/auth-login-stub/session"
 
-  val authApiUrl: String = s"$authApiBaseUrl/government-gateway/session/login"
   lazy val scope: String = "trader-goods-profiles"
 
   final val EORI              = "GB123456789001"
   final val EORIFor100Records = "GB123456789011"
   final val EORIFor380Records = "GB123456789012"
 
-  def getAuthToken(): Unit = {
+  def getAuthToken(eori: String): String = {
     val response = Await.result(
       wsClient
         .url(authApiUrl)
@@ -70,7 +71,7 @@ object TGPAuthRequests extends ServicesConfiguration {
                 "identifiers" -> Seq(
                   Json.obj(
                     "key"   -> "EORINumber",
-                    "value" -> EORI
+                    "value" -> eori
                   )
                 ),
                 "state"       -> "Activated"
@@ -82,11 +83,7 @@ object TGPAuthRequests extends ServicesConfiguration {
     )
     require(response.status == 201, "Unable to create auth token")
 
-    val authHeader =
-      response.headers.getOrElse(HttpHeaderNames.Authorization.toString, "unable to get auth header").toString
-
-    css(authHeader)
-      .saveAs("accessToken")
+    response.headers.getOrElse(Authorization.toString, "unable to get auth header").toString
   }
 
   def saveCsrfToken(): CheckBuilder[RegexCheckType, String, String] = regex(_ => CsrfPattern).saveAs("csrfToken")

@@ -26,7 +26,6 @@ import uk.gov.hmrc.performance.conf.ServicesConfiguration
 object TGPAPIRequest extends ServicesConfiguration {
 
   val authLoginStub: String = "/auth-login-stub"
-  val bearerToken: String   = readProperty("bearerToken", "${accessToken}")
   val baseUrl: String       =
     if (!runLocal) s"${baseUrlFor("tgp-api")}/customs/traders/goods-profiles"
     else baseUrlFor("tgp-api")
@@ -41,131 +40,130 @@ object TGPAPIRequest extends ServicesConfiguration {
   val CUSTOM_ACCEPT_HEADER: String = "application/vnd.hmrc.1.0+json"
 
   def generateHeaders(
-    contentType: String = APPLICATION_JSON,
-    acceptHeader: String = CUSTOM_ACCEPT_HEADER
+    bearerToken: String
   ): Map[String, String] =
     if (!runLocal)
       Map(
-        CONTENT_TYPE_HEADER.toString  -> contentType,
+        CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
         AUTHORIZATION_HEADER.toString -> s"Bearer $bearerToken",
-        ACCEPT_HEADER.toString        -> acceptHeader
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER
       )
     else
       Map(
-        CONTENT_TYPE_HEADER.toString  -> contentType,
+        CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
         AUTHORIZATION_HEADER.toString -> bearerToken,
-        ACCEPT_HEADER.toString        -> acceptHeader,
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
         X_CLIENT_ID_HEADER.toString   -> "test"
       )
 
   def generateHeadersWithoutContentType(
-    acceptHeader: String = CUSTOM_ACCEPT_HEADER
+    bearerToken: String
   ): Map[String, String] =
     if (!runLocal)
       Map(
         AUTHORIZATION_HEADER.toString -> s"Bearer $bearerToken",
-        ACCEPT_HEADER.toString        -> acceptHeader
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER
       )
     else
       Map(
         AUTHORIZATION_HEADER.toString -> bearerToken,
-        ACCEPT_HEADER.toString        -> acceptHeader,
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
         X_CLIENT_ID_HEADER.toString   -> "test"
       )
 
-  val getSingleGoodsRecord: HttpRequestBuilder =
+  def getSingleGoodsRecord(bearerToken: String): HttpRequestBuilder =
     http("TGP GET single Record Api Success Response 200")
       .get(s"$baseUrl/GB123456789001/records/b2fa315b-2d31-4629-90fc-a7b1a5119873")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
-  val createGoodsRecords: HttpRequestBuilder =
+  def createGoodsRecords(bearerToken: String): HttpRequestBuilder =
     http("CREATE TGP Api Record Success Response 201")
       .post(s"$baseUrl/GB123456789001/records")
-      .headers(generateHeaders())
+      .headers(generateHeaders(bearerToken))
       .body(StringBody(Helper.jsonBody))
       .asJson
       .check(status.is(201))
 
-  val updateGoodsRecords: HttpRequestBuilder =
+  def updateGoodsRecords(bearerToken: String): HttpRequestBuilder =
     http("UPDATE TGP Api Record Success Response 200")
       .patch(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
-      .headers(generateHeaders())
+      .headers(generateHeaders(bearerToken))
       .body(StringBody(Helper.jsonBody))
       .asJson
       .check(status.is(200))
 
-  val removeGoodsRecords: HttpRequestBuilder =
+  def removeGoodsRecords(bearerToken: String): HttpRequestBuilder =
     http("REMOVE TGP Api Record Success Response 204")
       .delete(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f?actorId=GB123456789001")
-      .headers(generateHeaders())
+      .headers(generateHeaders(bearerToken))
       .asJson
       .check(status.is(204))
 
-  val askHmrcAdvice: HttpRequestBuilder =
+  def askHmrcAdvice(bearerToken: String): HttpRequestBuilder =
     http("Ask HMRC advice Success Response 201")
       .post(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f/advice")
-      .headers(generateHeaders())
+      .headers(generateHeaders(bearerToken))
       .body(StringBody(Helper.jsonBodyAskHmrcAdvice))
       .asJson
       .check(status.is(201))
 
-  val maintainGoodsProfile: HttpRequestBuilder =
+  def maintainGoodsProfile(bearerToken: String): HttpRequestBuilder =
     http("Maintain goods profile Success Response 200")
       .put(s"$baseUrl/GB123456789001")
-      .headers(generateHeaders())
+      .headers(generateHeaders(bearerToken))
       .body(StringBody(Helper.jsonBodyMaintainGoodsProfile))
       .asJson
       .check(status.is(200))
 
   // Additional GET requests
 
-  val get100GoodsRecordsByPage: HttpRequestBuilder =
+  def get100GoodsRecordsByPage(bearerToken: String): HttpRequestBuilder =
     http("GET TGP API Records by Page (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?page=1")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
-  val get380GoodsRecordsByPage: HttpRequestBuilder =
+  def get380GoodsRecordsByPage(bearerToken: String): HttpRequestBuilder =
     http("GET TGP API Records by Page (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?page=1")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
-  val get100GoodsRecordsBySize: HttpRequestBuilder =
+  def get100GoodsRecordsBySize(bearerToken: String): HttpRequestBuilder =
     http("GET TGP API Records by Size (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?size=100")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
-  val get380GoodsRecordsBySize: HttpRequestBuilder =
+  def get380GoodsRecordsBySize(bearerToken: String): HttpRequestBuilder =
     http("GET TGP API Records by Size (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?size=380")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
-  val get100GoodsRecordsByDate: HttpRequestBuilder =
+  def get100GoodsRecordsByDate(bearerToken: String): HttpRequestBuilder =
     http("GET TGP API Records by Last Updated Date (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records?lastUpdatedDate=2024-03-26T16:14:52Z")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
-  val get380GoodsRecordsByDate: HttpRequestBuilder =
+  def get380GoodsRecordsByDate(bearerToken: String): HttpRequestBuilder =
     http("GET TGP API Records by Last Updated Date (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records?lastUpdatedDate=2024-03-26T16:14:52Z")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
-  val get100GoodsRecordsByEORI: HttpRequestBuilder =
+  def get100GoodsRecordsByEORI(bearerToken: String): HttpRequestBuilder =
     http("GET TGP API Records by EORI (100) Success Response 200")
       .get(s"$baseUrl/GB123456789011/records")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
-  val get380GoodsRecordsByEORI: HttpRequestBuilder =
+  def get380GoodsRecordsByEORI(bearerToken: String): HttpRequestBuilder =
     http("GET TGP API Records by EORI (380) Success Response 200")
       .get(s"$baseUrl/GB123456789012/records")
-      .headers(generateHeadersWithoutContentType())
+      .headers(generateHeadersWithoutContentType(bearerToken))
       .check(status.is(200))
 
 }
