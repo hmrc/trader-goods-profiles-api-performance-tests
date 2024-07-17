@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.perftests.TGP
 
+import akka.actor.ActorSystem
 import io.gatling.core.Predef._
 import io.gatling.core.check.CheckBuilder
 import io.gatling.core.check.css.CssCheckType
@@ -26,18 +27,23 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 import jodd.lagarto.dom.NodeSelector
 import play.api.libs.json.Json
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+import play.api.libs.ws.ahc.StandaloneAhcWSClient
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
-import uk.gov.hmrc.perftests.TGP.Global.{authApiBaseUrl, wsClient}
 
+import java.util.UUID
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 import scala.util.matching.UnanchoredRegex
 
 object TGPAuthRequests extends ServicesConfiguration {
+  private implicit val system: ActorSystem = ActorSystem()
+  val wsClient: StandaloneAhcWSClient      = StandaloneAhcWSClient()
+
   lazy val CsrfPattern                = """<input type="hidden" name="csrfToken" value="([^"]+)""""
   lazy val baseUrl_Auth: String       = baseUrlFor("auth-login-stub")
   lazy val baseUrl_Auth_Token: String = baseUrlFor("tgp-api")
   lazy val stubBaseUrl: String        = baseUrlFor("auth-login-stub")
+  private val authApiBaseUrl: String  = baseUrlFor("auth-login-api")
   private val authApiUrl: String      = s"$authApiBaseUrl/government-gateway/session/login"
 
   lazy val jsonPattern: UnanchoredRegex = """\{"\w+":"([^"]+)""".r.unanchored
@@ -65,6 +71,7 @@ object TGPAuthRequests extends ServicesConfiguration {
             "credentialStrength" -> "strong",
             "confidenceLevel"    -> 50,
             "credentialRole"     -> "Admin",
+            "credId"             -> UUID.randomUUID().toString,
             "enrolments"         -> Seq(
               Json.obj(
                 "key"         -> "HMRC-CUS-ORG",
@@ -83,7 +90,11 @@ object TGPAuthRequests extends ServicesConfiguration {
     )
     require(response.status == 201, "Unable to create auth token")
 
-    response.headers.getOrElse(Authorization.toString, "unable to get auth header").toString
+    response.headers
+      .getOrElse(Authorization.toString, Seq("unable to get auth header"))
+      .flatMap(_.split(","))
+      .find(_.startsWith("Bearer"))
+      .get
   }
 
   def saveCsrfToken(): CheckBuilder[RegexCheckType, String, String] = regex(_ => CsrfPattern).saveAs("csrfToken")

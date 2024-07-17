@@ -11,6 +11,7 @@ object Dependencies {
     "com.typesafe.play"     %% "play-ahc-ws-standalone"    % "2.1.10",
     "com.typesafe.play"     %% "play-ws-standalone-json"   % "2.1.2",
     "com.github.pureconfig" %% "pureconfig"                % "0.17.2",
+    "com.typesafe.akka"     %% "akka-stream"               % "2.6.15",
     "io.gatling.highcharts"  % "gatling-charts-highcharts" % gatlingVersion
   ).map(_ % Test)
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.perftests.TGP
+package uk.gov.hmrc.perftests.TGP.setup
 
-final case class Service(
-                          protocol: String,
-                          host: String,
-                          port: String
-                        ) {
+import io.gatling.core.Predef._
+import io.gatling.core.action.builder.ActionBuilder
+import uk.gov.hmrc.performance.conf.Configuration
+import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.getAuthToken
 
-  def baseUrl: String =
-    s"$protocol://$host:$port"
+object Setup extends Configuration {
+
+  def setupSession(eori: String): List[ActionBuilder] =
+    exec { (session: Session) =>
+      session.setAll(
+        List(
+          "bearerToken" -> getAuthToken(eori)
+        )
+      )
+    }.actionBuilders
+
 }
