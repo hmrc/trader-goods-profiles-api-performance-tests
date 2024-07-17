@@ -18,10 +18,13 @@ package uk.gov.hmrc.perftests.TGP
 
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.TGP.TGPAPIRequest._
-import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{EORI, EORIFor100Records, EORIFor380Records}
 import uk.gov.hmrc.perftests.TGP.setup.Setup.setupSession
 
 class TGPAPISimulation extends PerformanceTestRunner {
+
+  final val EORI              = "GB123456789001"
+  final val EORIFor100Records = "GB123456789011"
+  final val EORIFor380Records = "GB123456789012"
 
   setup(
     "trader-goods-profiles-Get-Create-Update-Remove-Ask-advice-Maintain-profile-record-part",
