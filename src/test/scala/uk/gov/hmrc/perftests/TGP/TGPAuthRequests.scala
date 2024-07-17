@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.perftests.TGP
 
-import akka.actor.ActorSystem
 import io.gatling.http.HeaderNames.Authorization
+import org.apache.pekko.actor.ActorSystem
 import play.api.libs.json.Json
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
