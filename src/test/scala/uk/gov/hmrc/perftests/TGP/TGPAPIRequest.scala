@@ -26,7 +26,6 @@ import uk.gov.hmrc.performance.conf.ServicesConfiguration
 object TGPAPIRequest extends ServicesConfiguration {
 
   val authLoginStub: String = "/auth-login-stub"
-  val bearerToken: String   = readProperty("bearerToken", "${accessToken}")
   val baseUrl: String       =
     if (!runLocal) s"${baseUrlFor("tgp-api")}/customs/traders/goods-profiles"
     else baseUrlFor("tgp-api")
@@ -41,35 +40,32 @@ object TGPAPIRequest extends ServicesConfiguration {
   val CUSTOM_ACCEPT_HEADER: String = "application/vnd.hmrc.1.0+json"
 
   def generateHeaders(
-    contentType: String = APPLICATION_JSON,
-    acceptHeader: String = CUSTOM_ACCEPT_HEADER
   ): Map[String, String] =
     if (!runLocal)
       Map(
-        CONTENT_TYPE_HEADER.toString  -> contentType,
-        AUTHORIZATION_HEADER.toString -> s"Bearer $bearerToken",
-        ACCEPT_HEADER.toString        -> acceptHeader
+        CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
+        AUTHORIZATION_HEADER.toString -> "${bearerToken}",
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER
       )
     else
       Map(
-        CONTENT_TYPE_HEADER.toString  -> contentType,
-        AUTHORIZATION_HEADER.toString -> bearerToken,
-        ACCEPT_HEADER.toString        -> acceptHeader,
+        CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
+        AUTHORIZATION_HEADER.toString -> "${bearerToken}",
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
         X_CLIENT_ID_HEADER.toString   -> "test"
       )
 
   def generateHeadersWithoutContentType(
-    acceptHeader: String = CUSTOM_ACCEPT_HEADER
   ): Map[String, String] =
     if (!runLocal)
       Map(
-        AUTHORIZATION_HEADER.toString -> s"Bearer $bearerToken",
-        ACCEPT_HEADER.toString        -> acceptHeader
+        AUTHORIZATION_HEADER.toString -> "${bearerToken}",
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER
       )
     else
       Map(
-        AUTHORIZATION_HEADER.toString -> bearerToken,
-        ACCEPT_HEADER.toString        -> acceptHeader,
+        AUTHORIZATION_HEADER.toString -> "${bearerToken}",
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
         X_CLIENT_ID_HEADER.toString   -> "test"
       )
 

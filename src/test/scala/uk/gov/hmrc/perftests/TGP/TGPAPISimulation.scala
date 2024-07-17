@@ -16,39 +16,20 @@
 
 package uk.gov.hmrc.perftests.TGP
 
-import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.TGP.TGPAPIRequest._
-import uk.gov.hmrc.perftests.TGP.TGPAuthRequests.{EORI, EORIFor100Records, EORIFor380Records, authLogin, getAccessTokenGG, getAuthId, getCredentialsPage, getGrantAuthority200, getGrantAuthority303, getSession, getStart, grantAuthorityRedirect, grantAuthorityRedirect2, postAuthLogin, submitGrantAuthority}
+import uk.gov.hmrc.perftests.TGP.setup.Setup.setupSession
 
 class TGPAPISimulation extends PerformanceTestRunner {
 
-  def authRequests(EORI: String): Seq[HttpRequestBuilder] =
-    if (!runLocal) {
-      Seq(
-        getAuthId,
-        getStart,
-        getGrantAuthority303,
-        getCredentialsPage,
-        authLogin(EORI),
-        grantAuthorityRedirect,
-        grantAuthorityRedirect2,
-        getGrantAuthority200,
-        submitGrantAuthority,
-        getAccessTokenGG
-      )
-    } else {
-      Seq(postAuthLogin(EORI), getSession)
-    }
-
-  setup("auth-part", "Create an access token ").withRequests(authRequests(EORI): _*)
-  setup("auth-part-get-100-goods-records", "Create an access token ").withRequests(authRequests(EORIFor100Records): _*)
-  setup("auth-part-get-380-goods-records", "Create an access token ").withRequests(authRequests(EORIFor380Records): _*)
+  final val EORI              = "GB123456789001"
+  final val EORIFor100Records = "GB123456789011"
+  final val EORIFor380Records = "GB123456789012"
 
   setup(
-    "trader-goods-profiles-Get-Create-Update-Remove-Ask advice-Maintain profile-record-part",
-    "Get,Create,Update, Remove,Ask HMRC advice and Maintain goods profile- Success Response 200"
-  )
+    "trader-goods-profiles-Get-Create-Update-Remove-Ask-advice-Maintain-profile-record-part",
+    "Get, Create, Update, Remove, Ask HMRC advice and Maintain goods profile - Success Response 200"
+  ).withActions(setupSession(EORI): _*)
     .withRequests(
       getSingleGoodsRecord,
       createGoodsRecords,
@@ -61,7 +42,7 @@ class TGPAPISimulation extends PerformanceTestRunner {
   setup(
     "get-100-goods-records-by-page-size-date-EORI-part",
     "GET (100) Records by Page,Size,Date,EORI - Success Response 200"
-  )
+  ).withActions(setupSession(EORIFor100Records): _*)
     .withRequests(
       get100GoodsRecordsByPage,
       get100GoodsRecordsBySize,
@@ -72,7 +53,7 @@ class TGPAPISimulation extends PerformanceTestRunner {
   setup(
     "get-380-goods-records-by-page-size-date-EORI-part",
     "GET (380) Records by Page,Size,Date,EORI - Success Response 200"
-  )
+  ).withActions(setupSession(EORIFor380Records): _*)
     .withRequests(
       get380GoodsRecordsByPage,
       get380GoodsRecordsBySize,

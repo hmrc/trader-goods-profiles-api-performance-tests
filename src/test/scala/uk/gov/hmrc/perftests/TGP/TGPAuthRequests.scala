@@ -16,169 +16,58 @@
 
 package uk.gov.hmrc.perftests.TGP
 
-import io.gatling.core.Predef._
-import io.gatling.core.check.CheckBuilder
-import io.gatling.core.check.css.CssCheckType
-import io.gatling.core.check.regex.RegexCheckType
-import io.gatling.http.Predef._
-import io.gatling.http.request.builder.HttpRequestBuilder
-import jodd.lagarto.dom.NodeSelector
+import io.gatling.http.HeaderNames.Authorization
+import org.apache.pekko.actor.ActorSystem
+import play.api.libs.json.Json
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+import play.api.libs.ws.ahc.StandaloneAhcWSClient
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
-import scala.util.matching.UnanchoredRegex
+import java.util.UUID
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
 
 object TGPAuthRequests extends ServicesConfiguration {
-  lazy val CsrfPattern                  = """<input type="hidden" name="csrfToken" value="([^"]+)""""
-  lazy val baseUrl_Auth: String         = baseUrlFor("auth-login-stub")
-  lazy val baseUrl_Auth_Token: String   = baseUrlFor("tgp-api")
-  lazy val jsonPattern: UnanchoredRegex = """\{"\w+":"([^"]+)""".r.unanchored
+  private implicit val system: ActorSystem = ActorSystem()
+  val wsClient: StandaloneAhcWSClient      = StandaloneAhcWSClient()
 
-  lazy val clientId             = "F2B062wphrSO6lV6bQB257vvd97B"
-  lazy val clientSecret: String = "b8899bac-403f-4fc1-b5fe-3a2f3b993681"
-  lazy val redirectUri: String  = "urn:ietf:wg:oauth:2.0:oob"
-  lazy val authBaseUrl: String  = baseUrlFor("auth-login-stub")
+  private val authApiBaseUrl: String = baseUrlFor("auth-login-api")
+  private val authApiUrl: String     = s"$authApiBaseUrl/government-gateway/session/login"
 
-  lazy val authUrl: String = s"$authBaseUrl/auth-login-stub/gg-sign-in"
-  lazy val redirectionUrl  = s"$authBaseUrl/auth-login-stub/session"
-  lazy val scope: String   = "trader-goods-profiles"
-
-  final val EORI                                                    = "GB123456789001"
-  final val EORIFor100Records                                       = "GB123456789011"
-  final val EORIFor380Records                                       = "GB123456789012"
-  def saveCsrfToken(): CheckBuilder[RegexCheckType, String, String] = regex(_ => CsrfPattern).saveAs("csrfToken")
-
-  def getAuthId: HttpRequestBuilder =
-    http(requestName = "get AuthId")
-      .get(
-        s"$baseUrl_Auth/oauth/authorize?client_id=$clientId&redirect_uri=$redirectUri&scope=$scope&response_type=code"
-      )
-      .check(status.is(expected = 303))
-      .check(
-        header("Location")
-          .transform(location => extractDynamicCode(location))
-          .saveAs("auth_id")
-      )
-      .check(header("Location").is("/oauth/start?auth_id=${auth_id}"))
-
-  def postAuthLogin(EORI: String): HttpRequestBuilder =
-    http("Enter Auth login credentials ")
-      .post(authUrl)
-      .formParam("redirectionUrl", redirectionUrl)
-      .formParam("authorityId", "")
-      .formParam("credentialStrength", "strong")
-      .formParam("confidenceLevel", "50")
-      .formParam("affinityGroup", "Organisation")
-      .formParam("enrolment[0].name", "HMRC-CUS-ORG")
-      .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
-      .formParam("enrolment[0].taxIdentifier[0].value", EORI)
-      .formParam("enrolment[0].state", "Activated")
-      .check(status.is(303))
-      .check(bodyString.saveAs("responseBody"))
-
-  val getSession: HttpRequestBuilder =
-    http("Get auth login stub session information")
-      .get(redirectionUrl)
-      .check(status.is(200))
-      .check(saveBearerToken)
-
-  def saveBearerToken: CheckBuilder[CssCheckType, NodeSelector, String] =
-    css("[data-session-id=authToken] > code")
-      .saveAs("accessToken")
-
-  def extractDynamicCode(location: String): String = {
-    val p = """([^=]*)$""".r.unanchored
-    location match {
-      case p(auth_id) => auth_id
-      case _          => ""
-    }
-  }
-
-  def getStart: HttpRequestBuilder =
-    http("get Start")
-      .get(baseUrl_Auth + "/oauth/start?auth_id=${auth_id}")
-      .check(status.is(200))
-
-  def getGrantAuthority303: HttpRequestBuilder =
-    http("get Grant Authority 303")
-      .get(baseUrl_Auth + "/oauth/grantscope?auth_id=${auth_id}")
-      .check(status.is(303))
-      .check(
-        header("Location")
-          .is(baseUrl_Auth + "/gg/sign-in?continue=%2Foauth%2Fgrantscope%3Fauth_id%3D${auth_id}&origin=oauth-frontend")
-      )
-
-  def getCredentialsPage: HttpRequestBuilder =
-    http("get credentials page")
-      .get(baseUrl_Auth + "/auth-login-stub/gg-sign-in")
-      .check(status.is(200))
-
-  def authLogin(EORI: String): HttpRequestBuilder =
-    http("login Step")
-      .post(baseUrl_Auth + "/auth-login-stub/gg-sign-in")
-      .formParam("redirectionUrl", "/oauth/grantscope?auth_id=${auth_id}")
-      .formParam("credentialStrength", "strong")
-      .formParam("confidenceLevel", "200")
-      .formParam("authorityId", "abcd")
-      .formParam("affinityGroup", "Organisation")
-      .formParam("enrolment[0].name", "HMRC-CUS-ORG")
-      .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
-      .formParam("enrolment[0].taxIdentifier[0].value", EORI)
-      .formParam("enrolment[0].state", "Activated")
-      .check(status.is(303))
-
-  def grantAuthorityRedirect: HttpRequestBuilder =
-    http("get Grant Authority 2nd Redirect")
-      .get(baseUrl_Auth + "/gg/sign-in?continue=%2Foauth%2Fgrantscope%3Fauth_id%3D${auth_id}&origin=oauth-frontend")
-      .check(status.is(303))
-      .check(
-        header("Location")
-          .is(
-            baseUrl_Auth + "/bas-gateway/sign-in?continue_url=%2Foauth%2Fgrantscope%3Fauth_id%3D${auth_id}&origin=oauth-frontend"
+  def getAuthToken(eori: String): String = {
+    val response = Await.result(
+      wsClient
+        .url(authApiUrl)
+        .post(
+          Json.obj(
+            "affinityGroup"      -> "Organisation",
+            "credentialStrength" -> "strong",
+            "confidenceLevel"    -> 50,
+            "credentialRole"     -> "Admin",
+            "credId"             -> UUID.randomUUID().toString,
+            "enrolments"         -> Seq(
+              Json.obj(
+                "key"         -> "HMRC-CUS-ORG",
+                "identifiers" -> Seq(
+                  Json.obj(
+                    "key"   -> "EORINumber",
+                    "value" -> eori
+                  )
+                ),
+                "state"       -> "Activated"
+              )
+            )
           )
-      )
+        ),
+      5.seconds
+    )
+    require(response.status == 201, "Unable to create auth token")
 
-  def grantAuthorityRedirect2: HttpRequestBuilder =
-    http("get Grant Authority  Redirect2")
-      .get(
-        baseUrl_Auth + "/bas-gateway/sign-in?continue_url=%2Foauth%2Fgrantscope%3Fauth_id%3D${auth_id}&origin=oauth-frontend"
-      )
-      .check(status.is(303))
-
-  def getGrantAuthority200: HttpRequestBuilder =
-    http("get Grant Authority 200")
-      .get(baseUrl_Auth + "/oauth/grantscope?auth_id=${auth_id}")
-      .check(status.is(200))
-      .check(saveCsrfToken())
-
-  def submitGrantAuthority: HttpRequestBuilder =
-    http("submit Grant Authority")
-      .post(baseUrl_Auth + "/oauth/grantscope": String)
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("auth_id", "${auth_id}")
-      .check(status.is(200))
-      .check(css("#authorisation-code").ofType[String].saveAs("code"))
-
-  def getAccessTokenGG: HttpRequestBuilder =
-    http("Retrieve Access Token through GG")
-      .post(s"$baseUrl_Auth_Token/oauth/token")
-      .headers(Map("Content-Type" -> "application/x-www-form-urlencoded"))
-      .body(
-        StringBody(
-          "code=${code}&client_id=" + clientId +
-            "&client_secret=" + clientSecret +
-            "&grant_type=authorization_code&redirect_uri=" + redirectUri
-        )
-      )
-      .check(
-        bodyString
-          .transform { (body: String) =>
-            body match {
-              case jsonPattern(access_token) => access_token
-              case _                         => ""
-            }
-          }
-          .saveAs("accessToken")
-      )
-      .check(status.is(200))
+    response.headers
+      .getOrElse(Authorization.toString, Seq("unable to get auth header"))
+      .flatMap(_.split(","))
+      .find(_.startsWith("Bearer"))
+      .get
+  }
 
 }
