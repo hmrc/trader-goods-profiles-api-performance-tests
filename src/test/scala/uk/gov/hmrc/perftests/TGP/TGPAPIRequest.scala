@@ -41,33 +41,43 @@ object TGPAPIRequest extends ServicesConfiguration {
 
   def generateHeaders(
   ): Map[String, String] =
-    if (!runLocal)
-      Map(
+    if (!runLocal) {
+      val headers = Map(
         CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
         AUTHORIZATION_HEADER.toString -> "${bearerToken}",
         ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER
       )
-    else
-      Map(
+      println(s"headers being sent: $headers")
+      headers
+    } else {
+      val headers = Map(
         CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
         AUTHORIZATION_HEADER.toString -> "${bearerToken}",
         ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
         X_CLIENT_ID_HEADER.toString   -> "test"
       )
+      println(s"headers being sent: $headers")
+      headers
+    }
 
   def generateHeadersWithoutContentType(
   ): Map[String, String] =
-    if (!runLocal)
-      Map(
+    if (!runLocal) {
+      val headers = Map(
         AUTHORIZATION_HEADER.toString -> "${bearerToken}",
         ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER
       )
-    else
-      Map(
+      println(s"headers being sent: $headers")
+      headers
+    } else {
+      val headers = Map(
         AUTHORIZATION_HEADER.toString -> "${bearerToken}",
         ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
         X_CLIENT_ID_HEADER.toString   -> "test"
       )
+      println(s"headers being sent: $headers")
+      headers
+    }
 
   val getSingleGoodsRecord: HttpRequestBuilder =
     http("TGP GET single Record Api Success Response 200")
