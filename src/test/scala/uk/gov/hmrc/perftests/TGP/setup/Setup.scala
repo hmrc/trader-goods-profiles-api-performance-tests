@@ -25,11 +25,7 @@ object Setup extends Configuration {
 
   def setupSession(eori: String): List[ActionBuilder] =
     exec { (session: Session) =>
-      session.setAll(
-        List(
-          "bearerToken" -> getAuthToken(eori)
-        )
-      )
+      session.set("bearerToken", getAuthToken(eori))
     }.actionBuilders
 
 }

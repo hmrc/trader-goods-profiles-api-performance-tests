@@ -17,7 +17,6 @@
 package uk.gov.hmrc.perftests.TGP
 
 import io.gatling.core.Predef._
-
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.util.AsciiString
