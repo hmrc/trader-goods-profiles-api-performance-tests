@@ -63,11 +63,15 @@ object TGPAuthRequests extends ServicesConfiguration {
     )
     require(response.status == 201, "Unable to create auth token")
 
-    response.headers
+    val authToken = response.headers
       .getOrElse(Authorization.toString, Seq("unable to get auth header"))
       .flatMap(_.split(","))
       .find(_.startsWith("Bearer"))
       .get
+    println(s"authToken for $eori: $authToken")
+
+    authToken
+
   }
 
 }
