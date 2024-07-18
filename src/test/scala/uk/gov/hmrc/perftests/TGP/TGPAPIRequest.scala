@@ -26,7 +26,7 @@ object TGPAPIRequest extends ServicesConfiguration {
 
   val authLoginStub: String = "/auth-login-stub"
   val baseUrl: String       =
-    if (!runLocal) s"${baseUrlFor("tgp-api")}/customs/traders/goods-profiles"
+    if (!runLocal) s"${baseUrlFor("tgp-api")}"
     else baseUrlFor("tgp-api")
 
   val CONTENT_TYPE_HEADER: AsciiString  = AsciiString.cached("Content-Type")
