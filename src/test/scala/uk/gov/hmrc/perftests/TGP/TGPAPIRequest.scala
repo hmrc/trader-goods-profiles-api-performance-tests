@@ -44,7 +44,8 @@ object TGPAPIRequest extends ServicesConfiguration {
       val headers = Map(
         CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
         AUTHORIZATION_HEADER.toString -> "${bearerToken}",
-        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER
+        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
+        X_CLIENT_ID_HEADER.toString   -> "test"
       )
       println(s"headers being sent: $headers")
       headers
