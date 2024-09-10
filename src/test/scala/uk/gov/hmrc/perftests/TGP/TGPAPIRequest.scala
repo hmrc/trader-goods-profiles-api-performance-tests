@@ -68,9 +68,17 @@ object TGPAPIRequest extends ServicesConfiguration {
       .asJson
       .check(status.is(201))
 
-  val updateGoodsRecords: HttpRequestBuilder =
-    http("UPDATE TGP Api Record Success Response 200")
+  val updatePatchGoodsRecords: HttpRequestBuilder =
+    http("UPDATE TGP Api Record Success Response 200 with PATCH method")
       .patch(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
+      .headers(generateHeaders)
+      .body(StringBody(Helper.jsonBody))
+      .asJson
+      .check(status.is(200))
+
+  val updatePutGoodsRecords: HttpRequestBuilder =
+    http("UPDATE TGP Api Record Success Response 200 with PUT method")
+      .put(s"$baseUrl/GB123456789001/records/8ebb6b04-6ab0-4fe2-ad62-e6389a8a204f")
       .headers(generateHeaders)
       .body(StringBody(Helper.jsonBody))
       .asJson
