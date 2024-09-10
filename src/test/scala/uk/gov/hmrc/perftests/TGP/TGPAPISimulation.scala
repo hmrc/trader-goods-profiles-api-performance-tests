@@ -27,13 +27,14 @@ class TGPAPISimulation extends PerformanceTestRunner {
   final val EORIFor380Records = "GB123456789012"
 
   setup(
-    "trader-goods-profiles-Get-Create-Update-Remove-Ask-advice-Maintain-profile-record-part",
-    "Get, Create, Update, Remove, Ask HMRC advice and Maintain goods profile - Success Response 200"
+    "trader-goods-profiles-Get-Create-UpdatePatch-UpdatePut-Remove-Ask-advice-Maintain-profile-record-part",
+    "Get, Create, UpdatePatch, UpdatePut, Remove, Ask HMRC advice and Maintain goods profile - Success Response 200"
   ).withActions(setupSession(EORI): _*)
     .withRequests(
       getSingleGoodsRecord,
       createGoodsRecords,
-      updateGoodsRecords,
+      updatePatchGoodsRecords,
+      updatePutGoodsRecords,
       removeGoodsRecords,
       askHmrcAdvice,
       maintainGoodsProfile
