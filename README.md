@@ -4,8 +4,10 @@
 
 Performance test suite for the `<digital service name>`, using [performance-test-runner](https://github.com/hmrc/performance-test-runner) under the hood.
 
-These performance tests work slightly differently to the standard within HMRC. They generate an auth token before the run, 
-then use this shared auth token for all requests, this was due to load of 10tps bringing down the auth service. 
+These performance tests work slightly differently to the standard tests within HMRC. They generate an auth token before the run, 
+then use this shared auth token for all requests, this was due to load of 10tps bringing down the auth service.
+
+This means that you can't run these tests locally against the staging environment. If you wish to do so, you will do so from Jenkins.
 
 This service has been configured to hit the auth service directly from inside the HMRC network. As can be seen from the [service.conf](src/test/resources/services.conf) file.
 
