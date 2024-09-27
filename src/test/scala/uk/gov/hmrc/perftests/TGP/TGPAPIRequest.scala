@@ -39,20 +39,19 @@ object TGPAPIRequest extends ServicesConfiguration {
   val CUSTOM_ACCEPT_HEADER: String = "application/vnd.hmrc.1.0+json"
 
   def generateHeaders: Map[String, String] =
-     Map(
-        CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
-        AUTHORIZATION_HEADER.toString -> "${bearerToken}",
-        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
-        X_CLIENT_ID_HEADER.toString   -> "test"
-      )
-
+    Map(
+      CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
+      AUTHORIZATION_HEADER.toString -> "${bearerToken}",
+      ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
+      X_CLIENT_ID_HEADER.toString   -> "test"
+    )
 
   def generateHeadersWithoutContentType: Map[String, String] =
     Map(
-        AUTHORIZATION_HEADER.toString -> "${bearerToken}",
-        ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
-        X_CLIENT_ID_HEADER.toString   -> "test"
-      )
+      AUTHORIZATION_HEADER.toString -> "${bearerToken}",
+      ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
+      X_CLIENT_ID_HEADER.toString   -> "test"
+    )
 
   val getSingleGoodsRecord: HttpRequestBuilder =
     http("TGP GET single Record Api Success Response 200")
