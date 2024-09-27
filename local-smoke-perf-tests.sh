@@ -2,4 +2,4 @@
 sbt scalafmtCheckAll scalafmtCheck
 sbt scalafmtSbt
 sbt scalafmtAll
-sbt -DrunLocal=false -Dperftest.runSmokeTest=true Gatling/test
+sbt -DrunLocal=true -Dperftest.runSmokeTest=true Gatling/test
