@@ -1,8 +1,6 @@
-**This is a template README.md.  Be sure to update this with project specific content that describes your performance test project.**
-
 # trader-goods-profiles-api-performance-tests
 
-Performance test suite for the `<digital service name>`, using [performance-test-runner](https://github.com/hmrc/performance-test-runner) under the hood.
+Performance test suite for the `trader-goods-profile`, using [performance-test-runner](https://github.com/hmrc/performance-test-runner) under the hood.
 
 These performance tests work slightly differently to the standard tests within HMRC. They generate an auth token before the run, 
 then use this shared auth token for all requests, this was due to load of 10tps bringing down the auth service.
