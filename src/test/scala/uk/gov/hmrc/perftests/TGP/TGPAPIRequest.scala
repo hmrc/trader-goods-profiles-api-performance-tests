@@ -41,14 +41,14 @@ object TGPAPIRequest extends ServicesConfiguration {
   def generateHeaders: Map[String, String] =
     Map(
       CONTENT_TYPE_HEADER.toString  -> APPLICATION_JSON,
-      AUTHORIZATION_HEADER.toString -> "${bearerToken}",
+      AUTHORIZATION_HEADER.toString -> "#{bearerToken}",
       ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
       X_CLIENT_ID_HEADER.toString   -> "test"
     )
 
   def generateHeadersWithoutContentType: Map[String, String] =
     Map(
-      AUTHORIZATION_HEADER.toString -> "${bearerToken}",
+      AUTHORIZATION_HEADER.toString -> "#{bearerToken}",
       ACCEPT_HEADER.toString        -> CUSTOM_ACCEPT_HEADER,
       X_CLIENT_ID_HEADER.toString   -> "test"
     )
